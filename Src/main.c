@@ -110,26 +110,66 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//	    if (rx_buff[0] == 0x20 && rx_buff[1] == 0x40) {
-//	      for (int i = 0; i < 6; i++) {
-//	        channels[i] = rx_buff[2 + i*2] | (rx_buff[3 + i*2] << 8);
-//	      }
-//
-//	      // Print first 3 channels
-//	      sprintf(msg, "CH1:%4d CH2:%4d CH3:%4d\r\n", channels[0], channels[1], channels[2]);
-//	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-//	    }
-//
-//	    HAL_Delay(100);
-//	  }
+	  if (rx_buff[0] == 0x20 && rx_buff[1] == 0x40) {
 
-//	  To test drivers set everything to high
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+	      for (int i = 0; i < 6; i++) {
+	          channels[i] = rx_buff[2 + i*2] | (rx_buff[3 + i*2] << 8);
+	      }
+
+	      uint8_t active = 0;
+
+	      // Check if ANY channel is above 1600
+	      for (int i = 0; i < 6; i++) {
+	          if (channels[i] > 1600) {
+	              active = 1;
+	              break;
+	          }
+	      }
+
+	      if (active) {
+
+	          // Set everything HIGH
+	          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+	          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_SET);
+
+	          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+	          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+
+	          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+	          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+	          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+
+	      } else {
+
+	          // Set everything LOW
+	          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+	          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_RESET);
+
+	          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
+	          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
+
+	          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+	          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+	          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+	      }
+	  }
+//
+	    HAL_Delay(100);
+//	  }
   }
   /* USER CODE END 3 */
-  }
+}
+
 /**
   * @brief System Clock Configuration
   * @retval None
